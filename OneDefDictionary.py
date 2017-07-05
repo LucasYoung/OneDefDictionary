@@ -2,32 +2,31 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-stop_words = set(stopwords.words("english"))
-
 def filterStopWords(sentence):
+	stop_words = set(stopwords.words("english"))
 	words = word_tokenize(sentence)
-	filtered_words = {}
+	filtered_words = set()
 	for w in words:
 		if w not in stop_words:
-			filtered_words.append(w)
+			filtered_words.add(w)
 	return filtered_words
 
 class Dictionary(object):
 	def __init__(self):
-		dictionary = {}
+		self.dictionary = {}
 
 	# adds a node to the dictionary
 	def addWord(self, word, definition):
-		newNode = Node(word, definition)
+		newNode = self.Node(word, definition)
 
-		if dict.get(word) is None:
+		if self.dictionary.get(word) is None:
 			self.dictionary[word] = [newNode]
 		else:
 			self.dictionary[word].append(newNode)
 
 	# calculates score for how well a node matches a context
 	# score is the number of matches between frequency dict and words in context
-	def judge(contextWordSet, freq_dict):
+	def judge(self, contextWordSet, freq_dict):
 		score = 0
 		for word in contextWordSet:
 			frequency = freq_dict.get(word)
@@ -48,27 +47,17 @@ class Dictionary(object):
 				maxNode = node
 
 		if(maxNode is not None):
-			return maxNode
+			return word + " - " + maxNode.definition
 		else:
 			return None
 
-class Node(object):
+	class Node(object):
 
-	# needs modifying for actual texts
-	def freq_dict_initializer(definition):
-		return dict.fromkeys(filterStopWords(definition), 0)
+		# needs modifying for actual texts
+		def freq_dict_initializer(self, definition):
+			return dict.fromkeys(filterStopWords(definition), 1)
 
-	def __init__(self, word, definition):
-		self.freq_dict = self.freq_dict_initializer(definition)
-		self.word = word
-		self.definition = definition
-
-	# each node has a set of words aka the definition
-	# each node will have a counter
-	# walk through array of nodes comparing words in set to words in context
-	# 
-	# frequency dictionary holds the frequency that each important word in the context 
-	# appears in the context
-	#
-	# 
-	#
+		def __init__(self, word, definition):
+			self.freq_dict = self.freq_dict_initializer(definition)
+			self.word = word
+			self.definition = definition
