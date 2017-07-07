@@ -2,6 +2,7 @@ import webscraper
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from PyDictionary import PyDictionary as pd
 
 class Dictionary(object):
 
@@ -61,6 +62,7 @@ class Dictionary(object):
 		def freq_dict_initializer(self):
 			freq_dict = {}
 			text = webscraper.webscrape(self.word, self.definition)
+			#parse words into a set
 			words = word_tokenize(text)
 
 			for w in words:
