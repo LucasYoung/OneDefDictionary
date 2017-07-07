@@ -1,17 +1,12 @@
+import webscraper
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-def filterStopWords(sentence):
-	stop_words = set(stopwords.words("english"))
-	words = word_tokenize(sentence)
-	filtered_words = set()
-	for w in words:
-		if w not in stop_words:
-			filtered_words.add(w)
-	return filtered_words
-
 class Dictionary(object):
+
+	stop_words = set(stopwords.words("english"))
+
 	def __init__(self):
 		self.dictionary = {}
 
@@ -34,9 +29,18 @@ class Dictionary(object):
 				score+=frequency
 		return score
 
+	def filterStopWords(self, sentence):
+
+		words = word_tokenize(sentence)
+		filtered_words = set()
+		for w in words:
+			if w not in Dictionary.stop_words:
+				filtered_words.add(w)
+		return filtered_words
+
 	# gets the appropriate definition of a word and context
 	def getDefinition(self, word, context):
-		contextWordSet = filterStopWords(context)
+		contextWordSet = self.filterStopWords(context)
 
 		maxScore = 0
 		maxNode = None
@@ -54,10 +58,21 @@ class Dictionary(object):
 	class Node(object):
 
 		# needs modifying for actual texts
-		def freq_dict_initializer(self, definition):
-			return dict.fromkeys(filterStopWords(definition), 1)
+		def freq_dict_initializer(self):
+			freq_dict = {}
+			text = webscraper.webscrape(self.word, self.definition)
+			words = word_tokenize(text)
+
+			for w in words:
+				if w not in Dictionary.stop_words:
+					if freq_dict.get(w) is None:
+						freq_dict[w] = 1
+					else:
+						freq_dict[w] += 1
+
+			return freq_dict
 
 		def __init__(self, word, definition):
-			self.freq_dict = self.freq_dict_initializer(definition)
 			self.word = word
 			self.definition = definition
+			self.freq_dict = self.freq_dict_initializer()
