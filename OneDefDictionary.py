@@ -34,18 +34,19 @@ class Node:
 
 			# TODO refactor
 			# adjusting frequency dictionaries from each concordance
-			for word in backwardConcordance:
+			for i in range(len(backwardConcordance)):
+				word = backwardConcordance[i]
 				if(self.backwardChain[i].get(word) is not None):
 					self.backwardChain[i][word] += 1
 				else:
 					self.backwardChain[i][word] = 1
 
-			for word in forwardConcordance:
+			for i in range(len(forwardConcordance)):
+				word = forwardConcordance[i]
 				if(self.forwardChain[i].get(word) is not None):
 					self.forwardChain[i][word] += 1
 				else:
 					self.forwardChain[i][word] = 1
-
 
 	def __init__(self, word, partOfSpeech, definition):
 		self.word = word
@@ -57,6 +58,12 @@ def judge(contextConcordance, node):
 	# dereferencing tuple
 	forwardConcordance = contextConcordance[0]
 	backwardConcordance = contextConcordance[1]
+
+	#print(backwardConcordance)
+	#print(node.backwardChain)
+
+	#print(forwardConcordance)
+	#print(node.forwardChain)
 
 	score = 0
 	for i in range(CHAIN_LENGTH):
@@ -84,7 +91,7 @@ def getDefinitions(word):
 # gets the appropriate definition of a word and context
 def getDefinition(word, context):
 	possibleDefinitions = getDefinitions(word)
-	default = "DEFAULT"
+	default = possibleDefinitions[0].definition
 
 	try:
 		context = aux_nlp.tokenizeFilter(context)

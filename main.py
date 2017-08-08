@@ -11,5 +11,10 @@ def main():
     if(checkInput(word, context)):
         print(OneDefDictionary.getDefinition(word, context))
 
+    word = "acute"
+    context = "The angle at the slice's tip is smaller than 90 degrees, making it an acute angle. Kitchen tongs"
+    if(checkInput(word, context)):
+        print(OneDefDictionary.getDefinition(word, context))
+
 if __name__ == "__main__":
 	main()

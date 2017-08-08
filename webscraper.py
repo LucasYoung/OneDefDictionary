@@ -21,7 +21,7 @@ def webscrape(word, partOfSpeech, definition):
     # getting query and url
     query = (word+" "+definition).replace(" ", "+")
     url = "https://en.wikipedia.org/w/index.php?title=Special:Search&limit="+str(MAX_PAGEVISITS)+"&search="+query
-    print(url)
+    #print(url)
 
     # opening page and parsing html
     page = urllib.request.urlopen(url)
@@ -36,12 +36,12 @@ def webscrape(word, partOfSpeech, definition):
     concordances = []
 
     i=0
-    while len(concordances) < WORD_INSTANCES and i < MAX_PAGEVISITS:
+    while len(concordances) < WORD_INSTANCES and i < MAX_PAGEVISITS and i < len(searchResults):
         link = "http://www.wikipedia.org/"+searchResults[i].find('a').get('href')
         concordances += scrapePage(link, word)
         i+=1
 
-    return concordances[0:WORD_INSTANCES]
+    return concordances[0 : min(WORD_INSTANCES, len(concordances))]
 
 def scrapePage(url, word):
     """
@@ -77,15 +77,3 @@ def scrapePage(url, word):
             break
 
     return concordances
-
-# Google custom search API key: AIzaSyDrGPuNV4MkmBb2Y36uO0e4wMwSC39qjOE
-# Search engine ID: 007934509129950526906:j8wgjiqdbhy
-'''
-def webscrape(word, partOfSpeech, definition):
-    query = word+" "+definition
-    print(query)
-    params = {'key': 'AIzaSyDrGPuNV4MkmBb2Y36uO0e4wMwSC39qjOE', 'cx': '007934509129950526906:j8wgjiqdbhy', 'q': query}
-    response = requests.get('https://www.googleapis.com/customsearch/v1?', params=params)
-    print(response.json())
-    return definition
-'''
